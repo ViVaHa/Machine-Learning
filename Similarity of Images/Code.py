@@ -44,8 +44,10 @@ def extract_features_sub(feature_file,pairs,cols):
     join2=pd.merge(pairs, feature_file, left_on='img_id_B', right_on='img_id')
     join1=join1.drop(join1.columns[cols], axis=1)
     join2=join2.drop(join2.columns[cols], axis=1)
-    
+    join1=join1.set_index('target')
+    join2=join2.set_index('target')
     features=abs(join1.sub(join2))
+    features=features.reset_index()
     
     return features
  
@@ -81,6 +83,8 @@ def preprocess_human_observed():
     features_sub=features_sub.sample(frac=1).reset_index(drop=True)
     return features_concat,features_sub
     
+    
 
 gsc_features_concat,gsc_features_sub=preprocess_gsc()
 human_features_concat,human_features_sub=preprocess_human_observed()
+
